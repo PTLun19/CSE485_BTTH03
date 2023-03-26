@@ -1,65 +1,33 @@
+<!-- Routing là gì? Định tuyến/Điều hướng -->
+<!-- Phân tích xem: URL của người dùng > Muốn gì -->
+<!-- Ví dụ: Trang chủ, Quản lý bài viết hay Thêm bài viết -->
+<!-- Chuyển quyền cho Controller tương ứng điều khiển tiếp -->
+<!-- URL của tôi thiết kế luôn có dạng: -->
+
+<!-- http://localhost/btth02v2/index.php?controller=A&action=B -->
+<!-- http://localhost/btth02v2/index.php -->
+<!-- http://localhost/btth02v2/index.php?controller=home&action=index -->
+
+<!-- Controller là tên của FILE controller mà chúng ta sẽ gọi -->
+<!-- Action là tên cả HÀM trong FILE controller mà chúng ta gọi -->
+
 <?php
-// index.php
+// B1: Bắt giá trị controller và action
+$controller = isset($_GET['controller'])?   $_GET['controller']:'home';
+$action     = isset($_GET['action'])?       $_GET['action']:'index';
+$id         = isset($_GET['id'])?       $_GET['id'] : null;
 
-require_once 'vendor/autoload.php';
+// B2: Chuẩn hóa tên trước khi gọi
+$controller = ucfirst($controller);
+$controller .= 'Controller';
+$controllerPath = 'controllers/'.$controller.'.php';
 
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-
-$routes = new RouteCollection();
-
-// ...
-
-// Initialize the routing context
-$request = Request::createFromGlobals();
-$context = new RequestContext();
-$context->fromRequest($request);
-
-// Match the current request to a route
-$matcher = new UrlMatcher($routes, $context);
-try {
-    $parameters = $matcher->match($request->getPathInfo());
-
-    // Call the appropriate controller method with the matched parameters
-    $controller = new $parameters['_controller'];
-    $response = call_user_func_array(array($controller, $parameters['_action']), $parameters);
-} catch (Exception $e) {
-    // Handle any exceptions thrown by the controller methods
-    $response = new Response('An error occurred: ' . $e->getMessage(), 500);
+// B3. Để gọi nó Controller
+if(!file_exists($controllerPath)){
+    die('Lỗi! Controller này không tồn tại');
 }
-
-// Send the response to the browser
-$response->send();
-
-// Error handling middleware
-function handleError($exception, $request, $debug) {
-    $response = new Response('An error occurred: ' . $exception->getMessage(), 500);
-    return $response;
-}
-
-$dispatcher = new FastRoute\Dispatcher\GroupCountBased();
-$dispatcher->register('GET', '/error', 'handleError');
-
-$request = Request::createFromGlobals();
-$routeInfo = $dispatcher->dispatch($request->getMethod(), $request->getPathInfo());
-switch ($routeInfo[0]) {
-    case FastRoute\Dispatcher::NOT_FOUND:
-        // Handle 404 errors
-        break;
-    case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
-        // Handle 405 errors
-        break;
-    case FastRoute\Dispatcher::FOUND:
-        $handler = $routeInfo[1];
-        $vars = $routeInfo[2];
-        // Call the error handling middleware with the caught exception
-        $response = call_user_func_array($handler, array($e, $request, $debug));
-        // Send the response to the browser
-        $response->send();
-        break;
-}
+require_once($controllerPath);
+// B4. Tạo đối tượng và gọi hàm của Controller
+$myObj = new $controller();  //controller=home > new HomeController()
+$myObj->$action(); //action=index > index()
 ?>
