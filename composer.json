@@ -1,16 +1,5 @@
 {
     "require": {
-        "composer/composer": "^2.5",
-        "twig/twig": "^3.5",
-        "phpmailer/phpmailer": "^6.8",
-        "phpunit/phpunit": "^9.5",
-        "symfony/routing": "^6.2"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "src/"
-        }
+        "twig/twig": "^3.5"
     }
-    
-    
 }
