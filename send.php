@@ -28,14 +28,14 @@ class MyEmailServer implements EmailServerInterface {
         $this->mailer->isSMTP();
         $this->mailer->Host = 'smtp.gmail.com';
         $this->mailer->SMTPAuth = true;
-        $this->mailer->Username = 'phamlinhlc19@gmail.com';
+        $this->mailer->Username = 'ptlinhh19@gmail.com';
         $this->mailer->Password = 'dfvpnlohtuqvmowy';
         $this->mailer->SMTPSecure = 'tls';
         $this->mailer->Port = 587;
     }
 
     public function sendEmail($to, $subject, $message) {
-        $this->mailer->setFrom('phamlinhlc19@gmail.com');
+        $this->mailer->setFrom('ptlinhh19@gmail.com');
         $this->mailer->addAddress($to);
         $this->mailer->Subject = $subject;
         $this->mailer->Body = $message;
