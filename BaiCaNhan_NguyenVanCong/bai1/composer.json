@@ -1,0 +1,7 @@
+{
+    "require": {
+        "phpmailer/phpmailer": "^6.8",
+        "composer/composer": "^2.5",
+        "twig/twig": "^3.5"
+    }
+}
